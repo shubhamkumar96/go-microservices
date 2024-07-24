@@ -2,6 +2,9 @@ FRONT_END_BINARY=frontApp
 FRONT_END_PORT=80
 BROKER_BINARY=brokerApp
 
+## up_all: starts all the services (front-end & broker-service)
+up_all: up start_front
+
 ## up: starts all containers in the background without forcing build
 up:
 	@echo "Starting Docker images..."
