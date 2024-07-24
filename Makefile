@@ -8,7 +8,7 @@ build_front:
 	@echo "Front-end build completed!"
 
 ## start: starts the front-end server
-start_front: build_front
+start_front: build_front stop_port
 	@echo "Starting front-end server"	
 	cd ./front-end && ./${FRONT_END_BINARY}
 
