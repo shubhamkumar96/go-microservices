@@ -15,24 +15,28 @@ start_front: build_front
 ## stop: stops the front-end server
 stop_front:
 	@echo "Stopping front-end server..."
-	$(MAKE) stop_port
+	$(MAKE) stop_port PORT=$(FRONT_END_PORT)
 	@echo "Stopped front-end server!"
 
 ## TO STOP THE PORT BEING USED
+
+# Default values for variables
+PORT ?= 80
+
 # Command to find the PID of the process using the port
-FIND_PID := lsof -t -i :$(FRONT_END_PORT)
+FIND_PID := lsof -t -i :$(PORT)
 
 # Command to kill the process using the port
 KILL_PID := $(FIND_PID) | xargs kill -9
 
-# Stop the process using the port
+# Stop the process using the port, whose value will be passed while calling 'stop_port'.
 stop_port:
-	@echo "Checking for processes using port $(FRONT_END_PORT)..."
+	@echo "Checking for processes using port $(PORT)..."
 	-@if [ "$$($(FIND_PID))" ]; then \
-		echo "Stopping process using port $(FRONT_END_PORT)"; \
+		echo "Stopping process using port $(PORT)"; \
 		$(KILL_PID); \
 	else \
-		echo "No process using port $(FRONT_END_PORT)"; \
+		echo "No process using port $(PORT)"; \
 	fi
 
 # Declaring .PHONY targets to force execution
