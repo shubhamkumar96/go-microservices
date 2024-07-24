@@ -37,7 +37,7 @@ build_front:
 ## start: starts the front-end server
 start_front: build_front stop_port
 	@echo "Starting front-end server"	
-	cd ./front-end && ./${FRONT_END_BINARY}
+	cd ./front-end && ./${FRONT_END_BINARY} &
 
 ## stop: stops the front-end server
 stop_front:
