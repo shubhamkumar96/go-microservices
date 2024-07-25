@@ -4,7 +4,7 @@ BROKER_BINARY=brokerApp
 AUTH_BINARY=authApp
 
 ## up_all: starts all the services (front-end & docker-services)
-up_all: up start_front
+up_all: up_build start_front
 
 ## up: starts all containers in the background without forcing build
 up:

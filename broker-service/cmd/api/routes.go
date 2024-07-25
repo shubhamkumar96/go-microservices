@@ -32,5 +32,8 @@ func (app *Config) routes() http.Handler {
 	// Add Routes
 	mux.Post("/", http.HandlerFunc(app.Broker))
 
+	// Add Route for single point of entry for all the microservice calls
+	mux.Post("/handle", app.HandleSubmission)
+
 	return mux
 }
