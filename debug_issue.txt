@@ -1,0 +1,10 @@
+(1) 
+ISSUE : 
+    If getting the below issue while connecting to postgres at "localhost:5432", through postgres-client :
+    - [role "postgres" does not exist]
+
+RESOLUTION:
+    The issue may be because of Postgres instance running locally (probably from another project), so try running 
+    "brew services stop postgresql" (assuming its installed with Homebrew). This will most probably resolve the issue.
+
+(2)   
