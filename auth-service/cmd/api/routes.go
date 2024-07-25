@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 
+	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
 )
@@ -25,11 +26,11 @@ func (app *Config) routes() http.Handler {
 		),
 	)
 
-	// // To check at this address, if the server is up or not.
-	// mux.Use(middleware.Heartbeat("/ping"))
+	// To check at this address, if the server is up or not.
+	mux.Use(middleware.Heartbeat("/ping"))
 
-	// // Add Routes
-	// mux.Post("/", http.HandlerFunc(app.Broker))
+	// Add Routes
+	mux.Post("/authenticate", http.HandlerFunc(app.Authenticate))
 
 	return mux
 }
