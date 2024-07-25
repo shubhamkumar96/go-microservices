@@ -8,3 +8,8 @@ RESOLUTION:
     "brew services stop postgresql" (assuming its installed with Homebrew). This will most probably resolve the issue.
 
 (2)   
+ISSUE :
+    Postgres is not getting started in docker:
+RESOLUTION:
+    Keep the 'db-data/postgres' folder completely empty. Remove the '.gitkeep' files from both 'postgres' & 'mongo' folders.
+    '.gitkeep' is kept to just keep track of the folder, as git does not track empty folders.    

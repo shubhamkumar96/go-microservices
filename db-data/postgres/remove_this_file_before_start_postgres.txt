@@ -1,4 +1,0 @@
-## Remove this file before starting postgres in the Docker, as the folder "db-data/postgres"
-should be completely empty.
-
-## Have added this dummy file, to check-in this folder to github, as empty folder is not checked-in to github.
