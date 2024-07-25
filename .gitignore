@@ -1,6 +1,7 @@
+*.DS_Store
 front-end/frontApp
 broker-service/brokerApp
 auth-service/authApp
+logger-service/loggerApp
 db-data/postgres/
-*.DS_Store
-db-data/postgres/remove_this_file_before_start_postgres.txt
+db-data/mongo/
