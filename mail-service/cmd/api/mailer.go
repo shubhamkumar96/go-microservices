@@ -40,7 +40,7 @@ func (m *Mail) SendSMTPMessage(msg Message) error {
 	}
 
 	data := map[string]any{
-		"messgae": msg.Data,
+		"message": msg.Data,
 	}
 
 	msg.DataMap = data
