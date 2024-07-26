@@ -3,5 +3,6 @@ front-end/frontApp
 broker-service/brokerApp
 auth-service/authApp
 logger-service/loggerApp
+mail-service/mailApp
 db-data/postgres/
 db-data/mongo/
