@@ -45,25 +45,7 @@
         let received = document.getElementById("received")
 
         brokerBtn.addEventListener("click", function(){
-            const body = {
-                method: 'POST',
-            }
-
-            fetch("http:\/\/localhost:8080", body)
-            .then((response) => response.json())
-            .then((data) => {
-                sent.innerHTML = "Empty Post Request";
-                received.innerHTML = JSON.stringify(data, undefined, 4);
-                if(data.Error){
-                    console.log(data.message);
-                }else{
-                    output.innerHTML += `<br><strong> Response From Broker-Service:</strong> ${data.message}`;
-                }
-            })
-            .catch((error) => {
-                output.innerHTML += "<br><br>Error: " + error;
-            })
-        
+            callBrokerService(payload, "Broker-Service", "");
         })
 
         authBrokerBtn.addEventListener("click", function(){
@@ -75,30 +57,7 @@
                 }
             }
 
-            const headers = new Headers();
-            headers.append("Content-Type", "application/json");
-
-            const body = {
-                method: 'POST',
-                body: JSON.stringify(payload),
-                headers: headers,
-            }
-
-            fetch("http:\/\/localhost:8080/handle", body)
-            .then((response) => response.json())
-            .then((data) => {
-                sent.innerHTML = JSON.stringify(payload, undefined, 4);
-                received.innerHTML = JSON.stringify(data, undefined, 4);
-                if(data.Error){
-                    output.innerHTML += `<br><strong>Error:</strong> ${data.message}`;
-                }else{
-                    output.innerHTML += `<br><strong> Response From Auth-Via-Broker-Service:</strong> ${data.message}`;
-                }
-            })
-            .catch((error) => {
-                output.innerHTML += "<br><br>Error: " + error;
-            })
-        
+            callBrokerService(payload, "Auth-Via-Broker-Service", "handle");
         })
 
         logBrokerBtn.addEventListener("click", function(){
@@ -110,30 +69,7 @@
                 }
             }
 
-            const headers = new Headers();
-            headers.append("Content-Type", "application/json");
-
-            const body = {
-                method: 'POST',
-                body: JSON.stringify(payload),
-                headers: headers,
-            }
-
-            fetch("http:\/\/localhost:8080/handle", body)
-            .then((response) => response.json())
-            .then((data) => {
-                sent.innerHTML = JSON.stringify(payload, undefined, 4);
-                received.innerHTML = JSON.stringify(data, undefined, 4);
-                if(data.Error){
-                    output.innerHTML += `<br><strong>Error:</strong> ${data.message}`;
-                }else{
-                    output.innerHTML += `<br><strong> Response From Logger-Via-Broker-Service:</strong> ${data.message}`;
-                }
-            })
-            .catch((error) => {
-                output.innerHTML += "<br><br>Error: " + error;
-            })
-        
+            callBrokerService(payload, "Logger-Via-Broker-Service", "handle");
         })
 
         mailBrokerBtn.addEventListener("click", function(){
@@ -147,6 +83,12 @@
                 }
             }
 
+            callBrokerService(payload, "Mail-Via-Broker-Service", "handle");
+        })
+
+        // Function to make POST call to '/handle' URL of "broker-service" (as it is mapped
+        // to port 8080 in local, with port 80 in Docker where it is actually running)
+        function callBrokerService(payload, serviceName, urlPath) {
             const headers = new Headers();
             headers.append("Content-Type", "application/json");
 
@@ -155,23 +97,26 @@
                 body: JSON.stringify(payload),
                 headers: headers,
             }
-
-            fetch("http:\/\/localhost:8080/handle", body)
+            let url = "http:\/\/localhost:8080/" + urlPath
+            fetch(url, body)
             .then((response) => response.json())
             .then((data) => {
-                sent.innerHTML = JSON.stringify(payload, undefined, 4);
+                if (JSON.stringify(payload) === "{}") {
+                    sent.innerHTML = "Empty Post Request";
+                } else {
+                    sent.innerHTML = JSON.stringify(payload, undefined, 4);
+                }
                 received.innerHTML = JSON.stringify(data, undefined, 4);
                 if(data.Error){
                     output.innerHTML += `<br><strong>Error:</strong> ${data.message}`;
                 }else{
-                    output.innerHTML += `<br><strong> Response From Mail-Via-Broker-Service:</strong> ${data.message}`;
+                    output.innerHTML += `<br><strong> Response From "${serviceName}":</strong> ${data.message}`;
                 }
             })
             .catch((error) => {
                 output.innerHTML += "<br><br>Error: " + error;
             })
-        
-        })
+        }
 
     </script>
 {{end}}
