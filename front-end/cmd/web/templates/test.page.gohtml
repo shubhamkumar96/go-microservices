@@ -9,8 +9,11 @@
 
                 <a id="brokerBtn" class="btn btn-outline-secondary" href="javascript:void(0);"> Test Broker </a>
                 <a id="authBrokerBtn" class="btn btn-outline-secondary" href="javascript:void(0);"> Test Auth Via Broker </a>
-                <a id="logBrokerBtn" class="btn btn-outline-secondary" href="javascript:void(0);"> Test Log Via Broker </a>
+                <br>
+                <a id="logBrokerViaRESTBtn" class="btn btn-outline-secondary" href="javascript:void(0);"> Test Log Via Broker(using REST) </a>
+                <a id="logBrokerViaRPCBtn" class="btn btn-outline-secondary" href="javascript:void(0);"> Test Log Via Broker(using RPC) </a>
                 <a id="logBrokerRMQBtn" class="btn btn-outline-secondary" href="javascript:void(0);"> Test Log Via Broker Via RabbitMQ </a>
+                <br>
                 <a id="mailBrokerBtn" class="btn btn-outline-secondary" href="javascript:void(0);"> Test Mail Via Broker </a>
 
                 <div id="output" class="mt-5" style="outline: 1px solid silver; padding: 2em;">
@@ -39,7 +42,8 @@
     <script>
         let brokerBtn = document.getElementById("brokerBtn")
         let authBrokerBtn = document.getElementById("authBrokerBtn")
-        let logBrokerBtn = document.getElementById("logBrokerBtn")
+        let logBrokerViaRESTBtn = document.getElementById("logBrokerViaRESTBtn")
+        let logBrokerViaRPCBtn = document.getElementById("logBrokerViaRPCBtn")
         let logBrokerRMQBtn = document.getElementById("logBrokerRMQBtn")
         let mailBrokerBtn = document.getElementById("mailBrokerBtn")
         let output = document.getElementById("output")
@@ -62,12 +66,24 @@
             callBrokerService(payload, "Auth-Via-Broker-Service", "handle");
         })
 
-        logBrokerBtn.addEventListener("click", function(){
+        logBrokerViaRESTBtn.addEventListener("click", function(){
             const payload = {
-                action: "log",
+                action: "logViaREST",
                 log: {
                     name: "logData",
-                    data: "some data to log",
+                    data: "some data to log via REST",
+                }
+            }
+
+            callBrokerService(payload, "Logger-Via-Broker-Service", "handle");
+        })
+
+        logBrokerViaRPCBtn.addEventListener("click", function(){
+            const payload = {
+                action: "logViaRPC",
+                log: {
+                    name: "logData",
+                    data: "some data to log via RPC",
                 }
             }
 

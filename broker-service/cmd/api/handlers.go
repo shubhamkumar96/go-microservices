@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"net/rpc"
 
 	"github.com/shubhamkumar96/go-microservices/broker-service/event"
 )
@@ -55,9 +56,12 @@ func (app *Config) HandleSubmission(w http.ResponseWriter, r *http.Request) {
 	switch requestPayload.Action {
 	case "auth":
 		app.authenticate(w, requestPayload.Auth)
-	case "log":
-		// Log by directly calling logger-service
-		app.logData(w, requestPayload.Log)
+	case "logViaREST":
+		// Log by directly calling logger-service via REST API
+		app.logDataViaREST(w, requestPayload.Log)
+	case "logViaRPC":
+		// Log by directly calling logger-service via RPC
+		app.logDataViaRPC(w, requestPayload.Log)
 	case "logViaRMQ":
 		// Log by pushing event to RabbitMQ, from where the event will be consumed
 		// by listener-service, and then listener-service calls logger-service
@@ -121,7 +125,42 @@ func (app *Config) authenticate(w http.ResponseWriter, a AuthPayload) {
 	app.writeJSON(w, http.StatusAccepted, payLoad)
 }
 
-func (app *Config) logData(w http.ResponseWriter, l LogPayload) {
+func (app *Config) sendMail(w http.ResponseWriter, m MailPayload) {
+	// create json that we will send to the mail-service
+	jsonData, _ := json.MarshalIndent(m, "", "\t")
+
+	// create a http request
+	request, err := http.NewRequest("POST", "http://mail-service/send", bytes.NewBuffer(jsonData))
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+	request.Header.Set("Content-Type", "application/json")
+
+	// call the mail-service
+	client := &http.Client{}
+	response, err := client.Do(request)
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+	defer response.Body.Close()
+
+	// get the correct status-code
+	if response.StatusCode != http.StatusAccepted {
+		app.errorJSON(w, errors.New("error calling mail-service"))
+		return
+	}
+
+	var payLoad jsonResponse
+	payLoad.Error = false
+	payLoad.Message = "Message Sent to " + m.To
+
+	// write to response
+	app.writeJSON(w, http.StatusAccepted, payLoad)
+}
+
+func (app *Config) logDataViaREST(w http.ResponseWriter, l LogPayload) {
 	// create json that we will send to the logger-service
 	jsonData, _ := json.MarshalIndent(l, "", "\t")
 
@@ -156,39 +195,37 @@ func (app *Config) logData(w http.ResponseWriter, l LogPayload) {
 	app.writeJSON(w, http.StatusAccepted, payLoad)
 }
 
-func (app *Config) sendMail(w http.ResponseWriter, m MailPayload) {
-	// create json that we will send to the mail-service
-	jsonData, _ := json.MarshalIndent(m, "", "\t")
+// Define the type that remote RPC server expects
+type RPCPayload struct {
+	Name string
+	Data string
+}
 
-	// create a http request
-	request, err := http.NewRequest("POST", "http://mail-service/send", bytes.NewBuffer(jsonData))
+func (app *Config) logDataViaRPC(w http.ResponseWriter, l LogPayload) {
+	client, err := rpc.Dial("tcp", "logger-service:5001")
 	if err != nil {
 		app.errorJSON(w, err)
 		return
 	}
-	request.Header.Set("Content-Type", "application/json")
 
-	// call the mail-service
-	client := &http.Client{}
-	response, err := client.Do(request)
+	rpcPayload := RPCPayload{
+		Name: l.Name,
+		Data: l.Data,
+	}
+
+	var result string
+	// pass on the exact RPC method name you want to call
+	err = client.Call("RPCServer.LogInfo", rpcPayload, &result)
 	if err != nil {
 		app.errorJSON(w, err)
 		return
 	}
-	defer response.Body.Close()
 
-	// get the correct status-code
-	if response.StatusCode != http.StatusAccepted {
-		app.errorJSON(w, errors.New("error calling mail-service"))
-		return
-	}
+	var payload jsonResponse
+	payload.Error = false
+	payload.Message = result
 
-	var payLoad jsonResponse
-	payLoad.Error = false
-	payLoad.Message = "Message Sent to " + m.To
-
-	// write to response
-	app.writeJSON(w, http.StatusAccepted, payLoad)
+	app.writeJSON(w, http.StatusAccepted, payload)
 }
 
 func (app *Config) logDataViaRabbitMQ(w http.ResponseWriter, l LogPayload) {
