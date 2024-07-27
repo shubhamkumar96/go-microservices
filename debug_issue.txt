@@ -13,3 +13,15 @@ ISSUE :
 RESOLUTION:
     Keep the 'db-data/postgres' folder completely empty. Remove the '.gitkeep' files from both 'postgres' & 'mongo' folders.
     '.gitkeep' is kept to just keep track of the folder, as git does not track empty folders.    
+
+(3)   
+ISSUE :
+    If getting this issue -> "protoc-gen-go: Plugin failed with status code 1", which is related to 'protoc-gen-go'
+    not getting install at correct location.
+RESOLUTION:
+    Follow below steps on Mac, to fix it :
+        Step-1 > go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+        Step-2 > echo 'export PATH=$PATH:$(go env GOPATH)/bin' >> ~/.zshrc
+        Step-3 > source ~/.zshrc
+    Above should fix the issue, verify by running below command:
+        Step-4 > which protoc-gen-go
