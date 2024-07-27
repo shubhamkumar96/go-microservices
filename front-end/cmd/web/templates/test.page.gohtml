@@ -10,6 +10,7 @@
                 <a id="brokerBtn" class="btn btn-outline-secondary" href="javascript:void(0);"> Test Broker </a>
                 <a id="authBrokerBtn" class="btn btn-outline-secondary" href="javascript:void(0);"> Test Auth Via Broker </a>
                 <a id="logBrokerBtn" class="btn btn-outline-secondary" href="javascript:void(0);"> Test Log Via Broker </a>
+                <a id="logBrokerRMQBtn" class="btn btn-outline-secondary" href="javascript:void(0);"> Test Log Via Broker Via RabbitMQ </a>
                 <a id="mailBrokerBtn" class="btn btn-outline-secondary" href="javascript:void(0);"> Test Mail Via Broker </a>
 
                 <div id="output" class="mt-5" style="outline: 1px solid silver; padding: 2em;">
@@ -39,6 +40,7 @@
         let brokerBtn = document.getElementById("brokerBtn")
         let authBrokerBtn = document.getElementById("authBrokerBtn")
         let logBrokerBtn = document.getElementById("logBrokerBtn")
+        let logBrokerRMQBtn = document.getElementById("logBrokerRMQBtn")
         let mailBrokerBtn = document.getElementById("mailBrokerBtn")
         let output = document.getElementById("output")
         let sent = document.getElementById("payload")
@@ -66,6 +68,18 @@
                 log: {
                     name: "logData",
                     data: "some data to log",
+                }
+            }
+
+            callBrokerService(payload, "Logger-Via-Broker-Service", "handle");
+        })
+
+        logBrokerRMQBtn.addEventListener("click", function(){
+            const payload = {
+                action: "logViaRMQ",
+                log: {
+                    name: "logData",
+                    data: "some data to log via RabbitMQ",
                 }
             }
 

@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+
+	"github.com/shubhamkumar96/go-microservices/broker-service/event"
 )
 
 // Common request payload struct for all the microservices
@@ -54,7 +56,12 @@ func (app *Config) HandleSubmission(w http.ResponseWriter, r *http.Request) {
 	case "auth":
 		app.authenticate(w, requestPayload.Auth)
 	case "log":
+		// Log by directly calling logger-service
 		app.logData(w, requestPayload.Log)
+	case "logViaRMQ":
+		// Log by pushing event to RabbitMQ, from where the event will be consumed
+		// by listener-service, and then listener-service calls logger-service
+		app.logDataViaRabbitMQ(w, requestPayload.Log)
 	case "mail":
 		app.sendMail(w, requestPayload.Mail)
 	default:
@@ -182,4 +189,39 @@ func (app *Config) sendMail(w http.ResponseWriter, m MailPayload) {
 
 	// write to response
 	app.writeJSON(w, http.StatusAccepted, payLoad)
+}
+
+func (app *Config) logDataViaRabbitMQ(w http.ResponseWriter, l LogPayload) {
+	err := app.pushToQueue(l.Name, l.Data)
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+
+	var payload jsonResponse
+	payload.Error = false
+	payload.Message = "logged via RabbitMQ"
+
+	app.writeJSON(w, http.StatusAccepted, payload)
+}
+
+// Utility function used to push messages to Queue.
+func (app *Config) pushToQueue(name, msg string) error {
+	producer, err := event.NewProducer(app.Rabbit)
+	if err != nil {
+		return err
+	}
+
+	payload := LogPayload{
+		Name: name,
+		Data: msg,
+	}
+
+	j, _ := json.MarshalIndent(&payload, "", "\t")
+	err = producer.Push(string(j), "log.INFO")
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
