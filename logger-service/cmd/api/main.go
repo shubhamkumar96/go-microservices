@@ -4,7 +4,9 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"net"
 	"net/http"
+	"net/rpc"
 	"time"
 
 	"github.com/shubhamkumar96/go-microservices/logger-service/data"
@@ -48,19 +50,45 @@ func main() {
 		Models: data.New(client),
 	}
 
-	// Start the Server
-	app.serve()
+	// Start the HTTP Server, as a go-routine, otherwise the program
+	// will not run the next line of codes, as this is a blocking call.
+	go app.serveHTTP()
+
+	// Register the RPC Server
+	err = rpc.Register(new(RPCServer))
+	if err != nil {
+		log.Panic(err)
+	}
+	// Start the RPC Server
+	app.serveRPC()
 }
 
-func (app *Config) serve() {
+func (app *Config) serveHTTP() {
 	srv := &http.Server{
 		Addr:    fmt.Sprintf(":%s", webPort),
 		Handler: app.routes(),
 	}
-	log.Println("Starting service on port:", webPort)
+	log.Println("Starting REST service on port:", webPort)
 	err := srv.ListenAndServe()
 	if err != nil {
 		log.Panic(err)
+	}
+}
+
+func (app *Config) serveRPC() error {
+	log.Println("Starting RPC service on port:", rpcPort)
+	listen, err := net.Listen("tcp", fmt.Sprintf(":%s", rpcPort))
+	if err != nil {
+		return err
+	}
+	defer listen.Close()
+
+	for {
+		rpcConn, err := listen.Accept()
+		if err != nil {
+			continue
+		}
+		go rpc.ServeConn(rpcConn)
 	}
 }
 
