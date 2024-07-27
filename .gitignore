@@ -4,7 +4,7 @@ broker-service/brokerApp
 auth-service/authApp
 logger-service/loggerApp
 mail-service/mailApp
+listener-service/listenerApp
 db-data/postgres/
 db-data/mongo/
 db-data/rabbitmq/
-listener-service/listenerApp
