@@ -7,3 +7,4 @@ mail-service/mailApp
 db-data/postgres/
 db-data/mongo/
 db-data/rabbitmq/
+listener-service/listenerApp
