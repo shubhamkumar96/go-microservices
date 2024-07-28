@@ -12,6 +12,7 @@
                 <br>
                 <a id="logBrokerViaRESTBtn" class="btn btn-outline-secondary" href="javascript:void(0);"> Test Log Via Broker(using REST) </a>
                 <a id="logBrokerViaRPCBtn" class="btn btn-outline-secondary" href="javascript:void(0);"> Test Log Via Broker(using RPC) </a>
+                <a id="logBrokerViaGRPCBtn" class="btn btn-outline-secondary" href="javascript:void(0);"> Test Log Via Broker(using gRPC) </a>
                 <a id="logBrokerRMQBtn" class="btn btn-outline-secondary" href="javascript:void(0);"> Test Log Via Broker Via RabbitMQ </a>
                 <br>
                 <a id="mailBrokerBtn" class="btn btn-outline-secondary" href="javascript:void(0);"> Test Mail Via Broker </a>
@@ -44,6 +45,7 @@
         let authBrokerBtn = document.getElementById("authBrokerBtn")
         let logBrokerViaRESTBtn = document.getElementById("logBrokerViaRESTBtn")
         let logBrokerViaRPCBtn = document.getElementById("logBrokerViaRPCBtn")
+        let logBrokerViaGRPCBtn = document.getElementById("logBrokerViaGRPCBtn")
         let logBrokerRMQBtn = document.getElementById("logBrokerRMQBtn")
         let mailBrokerBtn = document.getElementById("mailBrokerBtn")
         let output = document.getElementById("output")
@@ -75,7 +77,7 @@
                 }
             }
 
-            callBrokerService(payload, "Logger-Via-Broker-Service", "handle");
+            callBrokerService(payload, "Logger-Via-Broker-Service(using REST)", "handle");
         })
 
         logBrokerViaRPCBtn.addEventListener("click", function(){
@@ -87,7 +89,19 @@
                 }
             }
 
-            callBrokerService(payload, "Logger-Via-Broker-Service", "handle");
+            callBrokerService(payload, "Logger-Via-Broker-Service(using RPC)", "handle");
+        })
+
+        logBrokerViaGRPCBtn.addEventListener("click", function(){
+            const payload = {
+                action: "logViaGRPC",
+                log: {
+                    name: "logData",
+                    data: "some data to log via gRPC",
+                }
+            }
+
+            callBrokerService(payload, "Logger-Via-Broker-Service(using GRPC)", "handle");
         })
 
         logBrokerRMQBtn.addEventListener("click", function(){

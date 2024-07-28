@@ -34,7 +34,7 @@ func (l *LogServer) WriteLog(ctx context.Context, req *logs.LogRequest) (*logs.L
 	}
 
 	// return the sucessful response
-	res := &logs.LogResponse{Result: "Logged!"}
+	res := &logs.LogResponse{Result: "Logged Via GRPC!"}
 	return res, nil
 }
 

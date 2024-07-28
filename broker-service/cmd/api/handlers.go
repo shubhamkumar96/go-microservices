@@ -2,12 +2,17 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"net/http"
 	"net/rpc"
+	"time"
 
 	"github.com/shubhamkumar96/go-microservices/broker-service/event"
+	"github.com/shubhamkumar96/go-microservices/broker-service/logs"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 // Common request payload struct for all the microservices
@@ -62,6 +67,9 @@ func (app *Config) HandleSubmission(w http.ResponseWriter, r *http.Request) {
 	case "logViaRPC":
 		// Log by directly calling logger-service via RPC
 		app.logDataViaRPC(w, requestPayload.Log)
+	case "logViaGRPC":
+		// Log by directly calling logger-service via gRPC
+		app.logDataViaGRPC(w, requestPayload.Log)
 	case "logViaRMQ":
 		// Log by pushing event to RabbitMQ, from where the event will be consumed
 		// by listener-service, and then listener-service calls logger-service
@@ -224,6 +232,39 @@ func (app *Config) logDataViaRPC(w http.ResponseWriter, l LogPayload) {
 	var payload jsonResponse
 	payload.Error = false
 	payload.Message = result
+
+	app.writeJSON(w, http.StatusAccepted, payload)
+}
+
+func (app *Config) logDataViaGRPC(w http.ResponseWriter, l LogPayload) {
+	// Connect to the gRPC server
+	conn, err := grpc.Dial("logger-service:50001", grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithBlock())
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+	defer conn.Close()
+
+	// Create Client
+	c := logs.NewLogServiceClient(conn)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+
+	// Call the gRPC method
+	respone, err := c.WriteLog(ctx, &logs.LogRequest{
+		LogEntry: &logs.Log{
+			Name: l.Name,
+			Data: l.Data,
+		},
+	})
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+
+	var payload jsonResponse
+	payload.Error = false
+	payload.Message = respone.Result
 
 	app.writeJSON(w, http.StatusAccepted, payload)
 }
