@@ -54,11 +54,9 @@ func main() {
 	// will not run the next line of codes, as this is a blocking call.
 	go app.serveHTTP()
 
-	// Register the RPC Server
-	err = rpc.Register(new(RPCServer))
-	if err != nil {
-		log.Panic(err)
-	}
+	// Start the gRPC Server
+	go app.gRPCListen()
+
 	// Start the RPC Server
 	app.serveRPC()
 }
@@ -76,7 +74,14 @@ func (app *Config) serveHTTP() {
 }
 
 func (app *Config) serveRPC() error {
+	// Register the RPC Server
+	err := rpc.Register(new(RPCServer))
+	if err != nil {
+		log.Panic(err)
+	}
+
 	log.Println("Starting RPC service on port:", rpcPort)
+
 	listen, err := net.Listen("tcp", fmt.Sprintf(":%s", rpcPort))
 	if err != nil {
 		return err
