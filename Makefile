@@ -9,11 +9,20 @@ LISTENER_BINARY=listenerApp
 ## up_all: starts all the services (front-end & docker-services)
 up_all: up_build start_front
 
+## down_all: stops all the services (front-end & docker-services)
+down_all: down stop_front
+
 ## up: starts all containers in the background without forcing build
 up:
 	@echo "Starting Docker images..."
 	docker-compose up -d
 	@echo "Docker images started!"
+
+## down: stops docker compose
+down:
+	@echo "Stopping docker compose..."
+	docker-compose down
+	@echo "Docker Stopped!"
 
 ## up_build: stops docker-compose(if running), builds all projects and starts docker compose
 up_build: build_broker build_auth build_logger build_mail build_listener
@@ -22,12 +31,6 @@ up_build: build_broker build_auth build_logger build_mail build_listener
 	@echo "Building (when required) and starting docker images..."
 	docker-compose up -d --build
 	@echo "Docker images built and started!"
-
-## down: stops docker compose
-down:
-	@echo "Stopping docker compose..."
-	docker-compose down
-	@echo "Docker Stopped!"
 
 ## build_broker: builds the broker binary as a linux executable
 build_broker:
