@@ -197,7 +197,7 @@ func (app *Config) logDataViaREST(w http.ResponseWriter, l LogPayload) {
 
 	var payLoad jsonResponse
 	payLoad.Error = false
-	payLoad.Message = "Logged!"
+	payLoad.Message = "Logged via REST!"
 
 	// write to response
 	app.writeJSON(w, http.StatusAccepted, payLoad)
@@ -231,7 +231,7 @@ func (app *Config) logDataViaRPC(w http.ResponseWriter, l LogPayload) {
 
 	var payload jsonResponse
 	payload.Error = false
-	payload.Message = result
+	payload.Message = "Logged via RPC!"
 
 	app.writeJSON(w, http.StatusAccepted, payload)
 }
@@ -251,7 +251,7 @@ func (app *Config) logDataViaGRPC(w http.ResponseWriter, l LogPayload) {
 	defer cancel()
 
 	// Call the gRPC method
-	respone, err := c.WriteLog(ctx, &logs.LogRequest{
+	_, err = c.WriteLog(ctx, &logs.LogRequest{
 		LogEntry: &logs.Log{
 			Name: l.Name,
 			Data: l.Data,
@@ -264,7 +264,7 @@ func (app *Config) logDataViaGRPC(w http.ResponseWriter, l LogPayload) {
 
 	var payload jsonResponse
 	payload.Error = false
-	payload.Message = respone.Result
+	payload.Message = "Logged via gRPC!"
 
 	app.writeJSON(w, http.StatusAccepted, payload)
 }
@@ -278,7 +278,7 @@ func (app *Config) logDataViaRabbitMQ(w http.ResponseWriter, l LogPayload) {
 
 	var payload jsonResponse
 	payload.Error = false
-	payload.Message = "logged via RabbitMQ"
+	payload.Message = "Logged via RabbitMQ!"
 
 	app.writeJSON(w, http.StatusAccepted, payload)
 }

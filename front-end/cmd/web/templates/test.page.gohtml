@@ -7,15 +7,15 @@
                 <h1 class="mt-5"> Test Microservices </h1>
                 <hr>
 
-                <a id="brokerBtn" class="btn btn-outline-secondary" href="javascript:void(0);"> Test Broker </a>
-                <a id="authBrokerBtn" class="btn btn-outline-secondary" href="javascript:void(0);"> Test Auth Via Broker </a>
+                <a id="brokerBtn" class="btn btn-outline-secondary" href="javascript:void(0);"> Test Broker(REST) </a>
+                <a id="authBrokerBtn" class="btn btn-outline-secondary" href="javascript:void(0);"> Test Auth Via Broker(REST) </a>
                 <br>
-                <a id="logBrokerViaRESTBtn" class="btn btn-outline-secondary" href="javascript:void(0);"> Test Log Via Broker(using REST) </a>
-                <a id="logBrokerViaRPCBtn" class="btn btn-outline-secondary" href="javascript:void(0);"> Test Log Via Broker(using RPC) </a>
-                <a id="logBrokerViaGRPCBtn" class="btn btn-outline-secondary" href="javascript:void(0);"> Test Log Via Broker(using gRPC) </a>
-                <a id="logBrokerRMQBtn" class="btn btn-outline-secondary" href="javascript:void(0);"> Test Log Via Broker Via RabbitMQ </a>
+                <a id="logBrokerViaRESTBtn" class="btn btn-outline-secondary" href="javascript:void(0);"> Test Log Via Broker(REST) </a>
+                <a id="logBrokerViaRPCBtn" class="btn btn-outline-secondary" href="javascript:void(0);"> Test Log Via Broker(RPC) </a>
+                <a id="logBrokerViaGRPCBtn" class="btn btn-outline-secondary" href="javascript:void(0);"> Test Log Via Broker(gRPC) </a>
+                <a id="logBrokerRMQBtn" class="btn btn-outline-secondary" href="javascript:void(0);"> Test Log Via Broker(RabbitMQ) </a>
                 <br>
-                <a id="mailBrokerBtn" class="btn btn-outline-secondary" href="javascript:void(0);"> Test Mail Via Broker </a>
+                <a id="mailBrokerBtn" class="btn btn-outline-secondary" href="javascript:void(0);"> Test Mail Via Broker(REST) </a>
 
                 <div id="output" class="mt-5" style="outline: 1px solid silver; padding: 2em;">
                     <span class="text-muted"> Output Shows Here... </span>
@@ -53,7 +53,7 @@
         let received = document.getElementById("received")
 
         brokerBtn.addEventListener("click", function(){
-            callBrokerService(payload, "Broker-Service", "");
+            callBrokerService(payload, "Broker-Service(REST)", "");
         })
 
         authBrokerBtn.addEventListener("click", function(){
@@ -65,55 +65,51 @@
                 }
             }
 
-            callBrokerService(payload, "Auth-Via-Broker-Service", "handle");
+            callBrokerService(payload, "Auth-Via-Broker(REST)", "handle");
         })
 
         logBrokerViaRESTBtn.addEventListener("click", function(){
             const payload = {
                 action: "logViaREST",
                 log: {
-                    name: "logData",
-                    data: "some data to log via REST",
+                    name: "logDataViaREST",
+                    data: "log data via REST",
                 }
             }
-
-            callBrokerService(payload, "Logger-Via-Broker-Service(using REST)", "handle");
+            callBrokerService(payload, "Log-Via-Broker(REST)", "handle");
         })
 
         logBrokerViaRPCBtn.addEventListener("click", function(){
             const payload = {
                 action: "logViaRPC",
                 log: {
-                    name: "logData",
-                    data: "some data to log via RPC",
+                    name: "logDataViaRPC",
+                    data: "log data via RPC",
                 }
             }
-
-            callBrokerService(payload, "Logger-Via-Broker-Service(using RPC)", "handle");
+            callBrokerService(payload, "Log-Via-Broker(RPC)", "handle");
         })
 
         logBrokerViaGRPCBtn.addEventListener("click", function(){
             const payload = {
                 action: "logViaGRPC",
                 log: {
-                    name: "logData",
-                    data: "some data to log via gRPC",
+                    name: "logDataViaGRPC",
+                    data: "log data via gRPC",
                 }
             }
-
-            callBrokerService(payload, "Logger-Via-Broker-Service(using GRPC)", "handle");
+            callBrokerService(payload, "Log-Via-Broker(GRPC)", "handle");
         })
 
         logBrokerRMQBtn.addEventListener("click", function(){
             const payload = {
                 action: "logViaRMQ",
                 log: {
-                    name: "logData",
-                    data: "some data to log via RabbitMQ",
+                    name: "logDataViaRMQ",
+                    data: "log data via RabbitMQ",
                 }
             }
-
-            callBrokerService(payload, "Logger-Via-Broker-Service", "handle");
+            callBrokerService(payload, "Log-Via-Broker(RabbitMQ)", "handle");
         })
 
         mailBrokerBtn.addEventListener("click", function(){
@@ -127,7 +123,7 @@
                 }
             }
 
-            callBrokerService(payload, "Mail-Via-Broker-Service", "handle");
+            callBrokerService(payload, "Mail-Via-Broker(REST)", "handle");
         })
 
         // Function to make POST call to '/handle' URL of "broker-service" (as it is mapped
