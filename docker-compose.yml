@@ -44,7 +44,7 @@ services:
       replicas: 1
     environment:
       MAIL_DOMAIN:  localhost
-      MAIL_HOST:  mailhog
+      MAIL_HOST:  mailpit
       MAIL_PORT:  1025
       MAIL_ENCRYPTION:  none
       MAIL_USERNAME:  ""
@@ -87,11 +87,11 @@ services:
     volumes:
       - ./db-data/mongo/:/data/db    
 
-  mailhog:
-    image: 'mailhog/mailhog:latest'
+  mailpit:
+    image: 'axllent/mailpit:latest'
     ports: 
       - "1025:1025"
-      - "8025:8025" # port for web-interface (inbox), were we can see mail sent to mailhog server.
+      - "8025:8025" # port for web-interface (inbox), were we can see mail sent to mailpit server.
 
   rabbitmq:
     image: 'rabbitmq:3.9-alpine'
