@@ -1,10 +1,10 @@
 *.DS_Store
-front-end/frontApp
-broker-service/brokerApp
-auth-service/authApp
-logger-service/loggerApp
-mail-service/mailApp
-listener-service/listenerApp
-db-data/postgres/
 db-data/mongo/
+db-data/postgres/
 db-data/rabbitmq/
+auth-service/authApp
+mail-service/mailApp
+front-end/frontEndApp
+broker-service/brokerApp
+logger-service/loggerApp
+listener-service/listenerApp
