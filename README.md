@@ -62,3 +62,11 @@ Follow below steps to deploy to docker-swarm:
 - To entirely leave the docker-swarm execute ```docker swarm leave```, which will show you a warning message, so add the flag ```--force``` at the end of above command to force its close.
 
 
+## Use of Caddy as reverse-proxy:
+- Use the file 'caddy.dockerfile' & config 'Caddyfile', create a docker image, and push it to docker-hub, and post that use that image in your 'swarm.yml' file, to include it
+  as part of your 'docker-swarm'.
+  ```
+    docker build -f caddy.dockerfile -t shub96/micro-caddy:1.0.0 .
+    docker push shub96/micro-caddy:1.0.0
+  ```
+- 

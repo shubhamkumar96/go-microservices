@@ -1,6 +1,18 @@
 version: '3'
 
 services:
+  caddy:
+    image: shub96/micro-caddy:1.0.0
+    ports:
+      - "80:80"
+      - "443:443"
+    deploy:
+      mode: replicated
+      replicas: 1
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+
   front-end:
     image: shub96/front-end:1.0.0
     ports:
@@ -56,7 +68,6 @@ services:
     image: 'postgres:14.2'
     ports: 
       - "5432:5432"
-    restart: always
     deploy:
       mode: replicated
       replicas: 1
@@ -91,3 +102,8 @@ services:
     image: 'rabbitmq:3.9-alpine'
     deploy:
       mode: global   
+
+volumes:
+  caddy_data:      
+    external: true
+  caddy_config:  
