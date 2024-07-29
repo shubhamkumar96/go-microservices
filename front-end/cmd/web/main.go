@@ -1,19 +1,23 @@
 package main
 
 import (
+	"embed"
 	"fmt"
 	"html/template"
 	"log"
 	"net/http"
 )
 
-const webPort = "80"
+const webPort = "8081"
+
+//go:embed templates
+var templateFS embed.FS
 
 func main() {
 	// Handler for HomePage
 	http.HandleFunc("/", http.HandlerFunc(HomePageHandler))
 
-	fmt.Println("Starting Front End Service on Port 80")
+	fmt.Println("Starting Front End Service on Port", webPort)
 	addr := fmt.Sprintf(":%s", webPort)
 	// Starting the server on given port
 	err := http.ListenAndServe(addr, nil)
@@ -29,16 +33,16 @@ func HomePageHandler(res http.ResponseWriter, req *http.Request) {
 
 func render(res http.ResponseWriter, templateName string) {
 	partialTemplates := []string{
-		"./cmd/web/templates/base.layout.gohtml",
-		"./cmd/web/templates/header.partial.gohtml",
-		"./cmd/web/templates/footer.partial.gohtml",
+		"templates/base.layout.gohtml",
+		"templates/header.partial.gohtml",
+		"templates/footer.partial.gohtml",
 	}
 
 	// 'templateName' should be the first template to be passed to 'ParseFiles()'
-	templates := []string{fmt.Sprintf("./cmd/web/templates/%s", templateName)}
+	templates := []string{fmt.Sprintf("templates/%s", templateName)}
 	templates = append(templates, partialTemplates...)
 
-	tmpl, err := template.ParseFiles(templates...)
+	tmpl, err := template.ParseFS(templateFS, templates...)
 	if err != nil {
 		// Write error to response
 		http.Error(res, err.Error(), http.StatusInternalServerError)

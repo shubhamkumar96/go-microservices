@@ -12,7 +12,7 @@ import (
 )
 
 // Define port on which the server will listen on
-const webPort = "80"
+const webPort = "8080"
 
 // Define a type, which will be used as a receiver for the application.
 type Config struct {

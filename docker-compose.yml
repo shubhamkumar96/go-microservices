@@ -1,13 +1,22 @@
-version: '3'
-
 services:
+  front-end:
+    build:
+      context: ./front-end
+      dockerfile: front-end.dockerfile
+    ports:
+      - "8081:8081"  
+    restart: always
+    deploy:
+      mode: replicated
+      replicas: 1
+
   broker-service:
     build:
       context: ./broker-service
       dockerfile: broker-service.dockerfile
-    restart: always
     ports:
-      - "8080:80"
+      - "8080:8080"
+    restart: always
     deploy:
       mode: replicated
       replicas: 1
@@ -17,8 +26,6 @@ services:
       context: ./auth-service
       dockerfile: auth-service.dockerfile
     restart: always
-    ports:
-      - "8081:80"
     deploy:
       mode: replicated
       replicas: 1
