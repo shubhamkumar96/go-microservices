@@ -1,6 +1,8 @@
 # go-microservices
 This repo contains multiple micro-services (including 1 front-end service), Databases (MongoDB & Postgres), Messaging Queue (RabbitMQ), and Mail-Server (Mailpit) communicating with each other via REST, RPC, gRPC, & Messaging Queue.
 
+Execute ```make up_build``` to run the 'docker-compose.yml', if you want to run the front-end and broker-service without using 'Caddy' in your local machine.
+
 ## Command for generating grpc related code from 'logs.proto' file :
 After getting inside the 'logger-service/logs' folder where the 'logs.proto' file is present,
 exceute below command :

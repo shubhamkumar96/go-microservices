@@ -4,20 +4,20 @@ services:
       context: ./front-end
       dockerfile: front-end.dockerfile
     ports:
-      - "8081:8081"  
+      - "8081:8081" # Exposing to port 8081 of the local machine
     restart: always
     deploy:
       mode: replicated
       replicas: 1
     environment:
-      BROKER_URL: "http://localhost:8080"  
+      BROKER_URL: "http://localhost:8080"
 
   broker-service:
     build:
       context: ./broker-service
       dockerfile: broker-service.dockerfile
     ports:
-      - "8080:8080"
+      - "8080:8080" # Exposing to port 8080 of the local machine
     restart: always
     deploy:
       mode: replicated
