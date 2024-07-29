@@ -14,17 +14,15 @@ services:
       - caddy_config:/config
 
   front-end:
-    image: shub96/front-end:1.0.0
-    ports:
-      - "8081:8081"
+    image: shub96/front-end:1.0.1
     deploy:
       mode: replicated
       replicas: 1
+    environment:
+      BROKER_URL: "http://backend"  
 
   broker-service: # use same name as you used in docker-compose.yml file
     image: shub96/broker-service:1.0.1
-    ports:
-      - "8080:8080" # mention the ports, amd map to local if you want it to communicate with outside service (front-end here)
     deploy:
       mode: replicated
       replicas: 1

@@ -51,7 +51,7 @@ Follow below steps to deploy to docker-swarm:
 7. Stop entire docker-swarm using ```docker stack rm myapp```, removing manually from 'docker-desktop' will not work, as it will be getting created again and again if 'docker-swarm' is runnning.
 
 ## Update service in Docker-Swarm:
-1. To deploy updated version of the docker service in Docker-Swarm, just create new docker image for that service with new version tagged to it, and push it to docker-hub, similar to what we have done earlier.
+1. To deploy updated version of the docker service in Docker-Swarm, create updated build for that service using ```make build_auth```, than create new docker image for that service with new version tagged to it, and push it to docker-hub, similar to what we have done earlier.
 2. You can also increase the current running instance of that service to at least 2, so that there is no downtime while updating the service in docker-swarm (in production), as docker-swarm updates one instance of the service at a time.
 3. Use below command to update the service verison in the running docker-swarm:
 ``` docker service update --image shub96/auth-service:1.0.1 myapp_auth-service```, also don't forget to update the docker image version in your 'swarm.yml' file.
