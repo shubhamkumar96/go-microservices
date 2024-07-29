@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 )
 
 const webPort = "8081"
@@ -48,8 +49,15 @@ func render(res http.ResponseWriter, templateName string) {
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	// define and create data that we will be passing to go template
+	var data struct {
+		BrokerURL string
+	}
+	data.BrokerURL = os.Getenv("BROKER_URL")
+
 	// fmt.Println(tmpl.Name())
-	if err = tmpl.Execute(res, nil); err != nil {
+	if err = tmpl.Execute(res, data); err != nil {
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 		return
 	}

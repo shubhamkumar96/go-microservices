@@ -137,7 +137,8 @@
                 body: JSON.stringify(payload),
                 headers: headers,
             }
-            let url = "http:\/\/localhost:8080/" + urlPath
+            let url = {{.BrokerURL}} + "/" + urlPath
+            console.log(url)
             fetch(url, body)
             .then((response) => response.json())
             .then((data) => {
