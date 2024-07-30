@@ -81,7 +81,8 @@ services:
     ports: 
       - "27017:27017"
     deploy:
-      mode: global  
+      mode: replicated
+      replicas: 1 
     environment:
       MONGO_INITDB_DATABASE: logs
       MONGO_INITDB_ROOT_USERNAME: admin
@@ -94,12 +95,14 @@ services:
     ports:
       - "8025:8025" # port for web-interface (inbox), were we can see mail sent to mailpit server.
     deploy:
-      mode: global
+      mode: replicated
+      replicas: 1
 
   rabbitmq:
     image: 'rabbitmq:3.9-alpine'
     deploy:
-      mode: global   
+      mode: replicated
+      replicas: 1 
 
 volumes:
   caddy_data:      
