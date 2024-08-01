@@ -39,3 +39,24 @@ RESOLUTION:
     that is (GOARCH=amd64), as by default it is taking the defualt machine GOARCH, which is (GOARCH=arm64) for Apple Mac Silicon Chip:
         {{ cd ./broker-service && env GOOS=linux CGO_ENABLED=0 GOARCH=amd64 go build -o ${BROKER_BINARY} ./cmd/api }}
 
+(5)   
+ISSUE :
+    Services on manager-node is not able to communicate with service on worker-nodes, thus causing timeout.
+RESOLUTION:
+    This occurs because of worker-node being connected to swarm using 'private_ip', thus not able to communicate with services deployed 
+    on worker-node, so we need to add the worker-node using their 'public_ip'.
+    Follow below steps to resolve the issue:-
+        Step:1=> Leave the Swarm on the Worker Node: [Run command on worker-node]
+                    sudo docker swarm leave --force
+        Step:2=> Remove the Node from the Manager (if necessary): [Run command on manager-node]
+                    sudo docker node rm <node_id>
+        Step:3=> Get the Join Token on the Manager: [Run command on manager-node]
+                    sudo docker swarm join-token worker
+        Step:4=> Join the Worker Node with the Correct Advertised Address:  [Run command on worker-node]
+                    sudo docker swarm join --token <join_token> --advertise-addr <public_ip_of_worker_node> <public_ip_of_manager_node>:2377
+
+    --- To verify if worker-node is connected using 'public-ip-add' ---
+        Ensure that the Docker Swarm overlay network is properly configured. [Run command on manager-node]
+            docker network ls
+        Inspect the overlay network (mainly check in the 'Peers' field if the mentioned ip-add are all public one):    
+            docker network inspect <network_name>            
