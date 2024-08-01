@@ -2,7 +2,7 @@ version: '3'
 
 services:
   caddy:
-    image: shub96/micro-caddy-production:1.0.0
+    image: shub96/micro-caddy-production-linux-amd64
     ports:
       - "80:80"
       - "443:443"
@@ -14,7 +14,7 @@ services:
       - caddy_config:/config
 
   front-end:
-    image: shub96/front-end:1.0.1
+    image: shub96/front-end-production-linux-amd64
     deploy:
       mode: replicated
       replicas: 1
@@ -22,13 +22,13 @@ services:
       BROKER_URL: "http://broker.s5m.in"  
 
   broker-service: # use same name as you used in docker-compose.yml file
-    image: shub96/broker-service:1.0.1
+    image: shub96/broker-service-production-linux-amd64
     deploy:
       mode: replicated
       replicas: 1
 
   auth-service:
-    image: shub96/auth-service:1.0.0
+    image: shub96/auth-service-production-linux-amd64
     deploy:
       mode: replicated
       replicas: 1
@@ -36,19 +36,19 @@ services:
       DSN: "host=postgres port=5432 user=postgres password=password dbname=users sslmode=disable timezone=UTC connect_timeout=5"    
 
   listener-service:
-    image: shub96/listener-service:1.0.0
+    image: shub96/listener-service-production-linux-amd64
     deploy:
       mode: replicated
       replicas: 1
 
   logger-service:
-    image: shub96/logger-service:1.0.0
+    image: shub96/logger-service-production-linux-amd64
     deploy:
       mode: replicated
       replicas: 1
 
   mail-service:
-    image: shub96/mail-service:1.0.0
+    image: shub96/mail-service-production-linux-amd64
     deploy:
       mode: replicated
       replicas: 1

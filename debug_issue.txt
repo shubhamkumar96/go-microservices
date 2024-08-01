@@ -25,3 +25,17 @@ RESOLUTION:
         Step-3 > source ~/.zshrc
     Above should fix the issue, verify by running below command:
         Step-4 > which protoc-gen-go
+
+(4)   
+ISSUE :
+    Docker images are not working on EC2 Instance(as it is x86_64), and our local created build is in (arm64):
+    Command run on Local:>  uname -a
+        Darwin ; root:xnu-10063.121.3~5/RELEASE_ARM64_T8103 arm64
+    Command run on EC2 Instance:>  uname -a
+        Linux #13-Ubuntu SMP Mon Jul 15 13:40:27 UTC 2024 x86_64 x86_64 x86_64 GNU/Linux
+RESOLUTION:
+    As there is mismatch in the platform on which the build was generated, using which the docker image is also genrated.
+    So we need to run below command in MakeFile to generate build specific to 'linux/x86_64', by adding an additional env variable 
+    that is (GOARCH=amd64), as by default it is taking the defualt machine GOARCH, which is (GOARCH=arm64) for Apple Mac Silicon Chip:
+        {{ cd ./broker-service && env GOOS=linux CGO_ENABLED=0 GOARCH=amd64 go build -o ${BROKER_BINARY} ./cmd/api }}
+
