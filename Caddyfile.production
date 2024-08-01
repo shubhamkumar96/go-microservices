@@ -25,13 +25,14 @@
     }
 }
 
-swarm.s5m.in:80 {
+swarm.s5m.in {
     encode zstd gzip
     import static
+    import security
 
     reverse_proxy http://front-end:8081
 }
 
-broker.s5m.in:80 {
+broker.s5m.in {
     reverse_proxy http://broker-service:8080
 }

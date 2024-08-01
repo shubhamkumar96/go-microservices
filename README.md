@@ -76,3 +76,5 @@ Follow below steps to deploy to docker-swarm:
 - To deploy on your EC2 Instance(linux/amd64), use below command to generate the platform specific docker-image for all of your services that you have written, push the image to dockerhub and use this image in your 'swarm.production.yml' file, that is used for deploying to EC2 Instance. We are doing this because the previous images are built for the Mac Apple silicon chip, because of which, the images built using those builds does not works for running docker on EC2 Instance (which we have selected as a linux/amd64 OS). 
 
     ```make full_prod_linux_amd64```
+
+This is where the mail Inbox can be accessed - http://node-1.s5m.in:8025/

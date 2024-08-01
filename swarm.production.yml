@@ -22,7 +22,7 @@ services:
       mode: replicated
       replicas: 1
     environment:
-      BROKER_URL: "http://broker.s5m.in"  
+      BROKER_URL: "https://broker.s5m.in"  
 
   broker-service: # use same name as you used in docker-compose.yml file
     image: shub96/broker-service-production-linux-amd64
