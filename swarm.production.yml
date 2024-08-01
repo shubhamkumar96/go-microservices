@@ -1,0 +1,110 @@
+version: '3'
+
+services:
+  caddy:
+    image: shub96/micro-caddy-production:1.0.0
+    ports:
+      - "80:80"
+      - "443:443"
+    deploy:
+      mode: replicated
+      replicas: 1
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+
+  front-end:
+    image: shub96/front-end:1.0.1
+    deploy:
+      mode: replicated
+      replicas: 1
+    environment:
+      BROKER_URL: "http://broker.s5m.in"  
+
+  broker-service: # use same name as you used in docker-compose.yml file
+    image: shub96/broker-service:1.0.1
+    deploy:
+      mode: replicated
+      replicas: 1
+
+  auth-service:
+    image: shub96/auth-service:1.0.0
+    deploy:
+      mode: replicated
+      replicas: 1
+    environment:
+      DSN: "host=postgres port=5432 user=postgres password=password dbname=users sslmode=disable timezone=UTC connect_timeout=5"    
+
+  listener-service:
+    image: shub96/listener-service:1.0.0
+    deploy:
+      mode: replicated
+      replicas: 1
+
+  logger-service:
+    image: shub96/logger-service:1.0.0
+    deploy:
+      mode: replicated
+      replicas: 1
+
+  mail-service:
+    image: shub96/mail-service:1.0.0
+    deploy:
+      mode: replicated
+      replicas: 1
+    environment:
+      MAIL_DOMAIN:  localhost
+      MAIL_HOST:  mailpit
+      MAIL_PORT:  1025
+      MAIL_ENCRYPTION:  none
+      MAIL_USERNAME:  ""
+      MAIL_PASSWORD:  ""
+      FROM_NAME:  "Test User"
+      FROM_ADDRESS: "test.user@example.com"
+
+  postgres:
+    image: 'postgres:14.2'
+    ports: 
+      - "5432:5432"
+    deploy:
+      mode: replicated
+      replicas: 1
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: users
+    volumes:
+      - ./db-data/postgres/:/var/lib/postgresql/data/
+      
+  mongo:
+    image: 'mongo:4.2.16-bionic'
+    ports: 
+      - "27017:27017"
+    deploy:
+      mode: replicated
+      replicas: 1 
+    environment:
+      MONGO_INITDB_DATABASE: logs
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - ./db-data/mongo/:/data/db    
+
+  mailpit:
+    image: 'axllent/mailpit:latest'
+    ports:
+      - "8025:8025" # port for web-interface (inbox), were we can see mail sent to mailpit server.
+    deploy:
+      mode: replicated
+      replicas: 1
+
+  rabbitmq:
+    image: 'rabbitmq:3.9-alpine'
+    deploy:
+      mode: replicated
+      replicas: 1 
+
+volumes:
+  caddy_data:      
+    external: true
+  caddy_config:  
