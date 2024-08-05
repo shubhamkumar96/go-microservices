@@ -36,3 +36,7 @@ swarm.s5m.in {
 broker.s5m.in {
     reverse_proxy http://broker-service:8080
 }
+
+inbox.s5m.in {
+    reverse_proxy http://node-1.s5m.in:8025
+}

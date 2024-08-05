@@ -3,12 +3,13 @@
 {{define "content"}}
     <div class="container">
         <div class="row">
-            <div class="col">
-                <h1 class="mt-5"> Test Microservices </h1>
-                <hr>
-
+            <h1 class="mt-5"> Test Microservices </h1>
+            <hr>
+        </div>
+        <div class="row">
+            <div class="col-7">
                 <a id="brokerBtn" class="btn btn-outline-secondary" href="javascript:void(0);"> Test Broker(REST) </a>
-                <a id="authBrokerBtn" class="btn btn-outline-secondary" href="javascript:void(0);"> Test Auth Via Broker(REST) </a>
+                <a style="display: none;" id="authBrokerBtn" class="btn btn-outline-secondary" href="javascript:void(0);"> Test Auth Via Broker(REST) </a>
                 <br>
                 <a id="logBrokerViaRESTBtn" class="btn btn-outline-secondary" href="javascript:void(0);"> Test Log Via Broker(REST) </a>
                 <a id="logBrokerViaRPCBtn" class="btn btn-outline-secondary" href="javascript:void(0);"> Test Log Via Broker(RPC) </a>
@@ -16,10 +17,14 @@
                 <a id="logBrokerRMQBtn" class="btn btn-outline-secondary" href="javascript:void(0);"> Test Log Via Broker(RabbitMQ) </a>
                 <br>
                 <a id="mailBrokerBtn" class="btn btn-outline-secondary" href="javascript:void(0);"> Test Mail Via Broker(REST) </a>
-                <a href="http://node-1.s5m.in:8025/" target="_blank">  Link to Mail Inbox  </a>
+                <a style="display: none;" href="http://node-1.s5m.in:8025" target="_blank">  Link to Mail Inbox  </a>
                 <div id="output" class="mt-5" style="outline: 1px solid silver; padding: 2em;">
                     <span class="text-muted"> Output Shows Here... </span>
                 </div>
+            </div>
+            <div class="col-5">
+                <!-- Static iframe inclusion -->
+                <iframe src="https://inbox.s5m.in" width="600" height="400" title="Inbox Web Page"></iframe>
             </div>
         </div>
         <div class="row">
