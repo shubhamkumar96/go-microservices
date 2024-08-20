@@ -84,6 +84,6 @@ This is where the mail Inbox can be accessed - [Inbox](http://node-1.s5m.in:8025
 - Step-2: Run ```make full_prod_linux_amd64``` in your local, which will create the updated docker-images and push to docker-hub.
 - Step-3: In AWS, go to your EC2 instance, and connect to it using terminal.
 - Step-4: Go to swarm folder using ```cd /swarm```
-- Step-5: Stop the current running swarm using ```docker stack rm myapp```
+- Step-5: [We can skip this step] Stop the current running swarm using ```docker stack rm myapp```
 - Step-6: Run the swarm again using ```docker stack deploy -c swarm.yml myapp```
-By following above mentioned steps, your changes will be reflected on the deploted [front-end](https://swarm.s5m.in/)
+By following above mentioned steps, your changes will be reflected on the deployed [front-end](https://swarm.s5m.in/)
